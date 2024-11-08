@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Library</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        header {
+            background-color: #282c34;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .game-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            width: 250px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+        }
+
+        .game-card h3 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .game-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .game-card p strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Game Library</h1>
+</header>
+
+<main>
+    <div class="game-list">
+        <!-- Game 1 -->
+        <div class="game-card">
+            <h3>The Witcher 3</h3>
+            <p><strong>Genre:</strong> RPG</p>
+            <p><strong>Price:</strong> $29.99</p>
+            <p><strong>Release Date:</strong> 2015</p>
+        </div>
+
+        <!-- Game 2 -->
+        <div class="game-card">
+            <h3>Cyberpunk 2077</h3>
+            <p><strong>Genre:</strong> RPG</p>
+            <p><strong>Price:</strong> $49.99</p>
+            <p><strong>Release Date:</strong> 2020</p>
+        </div>
+
+        <!-- Game 3 -->
+        <div class="game-card">
+            <h3>Minecraft</h3>
+            <p><strong>Genre:</strong> Sandbox</p>
+            <p><strong>Price:</strong> $19.99</p>
+            <p><strong>Release Date:</strong> 2011</p>
+        </div>
+
+        <!-- Game 4 -->
+        <div class="game-card">
+            <h3>Overwatch 2</h3>
+            <p><strong>Genre:</strong> Shooter</p>
+            <p><strong>Price:</strong> $39.99</p>
+            <p><strong>Release Date:</strong> 2022</p>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
