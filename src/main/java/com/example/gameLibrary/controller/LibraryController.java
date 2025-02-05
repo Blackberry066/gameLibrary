@@ -49,8 +49,7 @@ public class LibraryController {
 
     @PostMapping
     private LibraryDTO createLibrary(@RequestBody LibraryDTO libraryDTO) {
-        return libraryDTOConverter.toDTO(libraryService
-                .createLibrary(libraryDTOConverter.toEntity(libraryDTO)));
+        return libraryDTOConverter.toDTO(libraryService.createLibrary(libraryDTOConverter.toEntity(libraryDTO)));
     }
 
     @PostMapping(path = "{id}")

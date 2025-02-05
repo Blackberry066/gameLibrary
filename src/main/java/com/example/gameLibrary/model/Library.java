@@ -24,7 +24,7 @@ public class Library {
     @Column(name = "id_library")
     private Long id;
 
-    @NotBlank
+
     @Column(name = "game_count")
     private Integer gameCount;
 

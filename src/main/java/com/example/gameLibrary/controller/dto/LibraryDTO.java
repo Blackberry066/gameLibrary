@@ -9,8 +9,8 @@ import java.util.Collection;
 @Getter
 @AllArgsConstructor
 public class LibraryDTO {
-    private final Long id;
-    private final Integer gameCount;
-    private final Collection<Long> gamesIds;
-    private final Long libraryOwnerId;
+    private Long id;
+    private Integer gameCount;
+    private Collection<Long> gamesIds;
+    private Long libraryOwnerId;
 }

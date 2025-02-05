@@ -14,7 +14,7 @@ public class LibraryUserDTO {
     private final String password;
     private final String name;
     private final String surname;
-    private final Date registrationDate;
-    private final Long ownedLibraryId;
+    private Date registrationDate;
+    private Long ownedLibraryId;
 
 }
