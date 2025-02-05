@@ -60,5 +60,15 @@ public class LibraryUserService implements LibraryUserServiceInterface {
         return libraryUserRepository.findAll();
     }
 
+    @Override
+    public LibraryUser changeUserUsernameById(Long id, String newUsername) throws EntityNotFoundException {
+        if(libraryUserRepository.existsById(id)) {
+            LibraryUser someUser = libraryUserRepository.getReferenceById(id);
+            someUser.setUsername(newUsername);
+            return someUser;
+        }
+        throw new EntityNotFoundException("Could not find library user with id " + id);
+    }
+
 
 }
