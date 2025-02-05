@@ -6,9 +6,14 @@ import com.example.gameLibrary.application.LibraryUserServiceInterface;
 import com.example.gameLibrary.controller.converter.GameDTOConverter;
 import com.example.gameLibrary.controller.converter.LibraryDTOConverter;
 import com.example.gameLibrary.controller.converter.LibraryUserDTOConverter;
+import com.example.gameLibrary.controller.dto.GameDTO;
 import com.example.gameLibrary.controller.dto.LibraryUserDTO;
+import com.example.gameLibrary.model.Game;
 import com.example.gameLibrary.model.LibraryUser;
 import com.example.gameLibrary.repository.LibraryUserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -43,6 +48,22 @@ public class LibraryUserController {
     @GetMapping(path = "{userId}")
     private LibraryUserDTO getUser(@PathVariable Long userId) {
         return libraryUserDTOConverter.toDTO(libraryUserService.getLibraryUserById(userId));
+    }
+
+    @Operation(summary = "Gets all games intersections from first and second user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Both users found and intersections returned"),
+            @ApiResponse(responseCode = "500", description = "Can't find first and/or second user")
+    })
+    @GetMapping(path = "shared_games")
+    private Collection<GameDTO> getGamesIntersection(
+            @RequestParam("u1") Long firstUserId, @RequestParam("u2") Long secondUserId
+    )
+    {
+        LibraryUser firstUser = libraryUserService.getLibraryUserById(firstUserId);
+        LibraryUser secondUser = libraryUserService.getLibraryUserById(secondUserId);
+        return gameService.getGamesIntersection(firstUser, secondUser).stream().map(game ->
+                gameDTOConverter.toDTO(game)).toList();
     }
 
     @PostMapping

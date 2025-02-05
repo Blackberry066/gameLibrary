@@ -46,6 +46,7 @@ public class GameController {
         return gameDTOConverter.toDTO(gameService.getGameById(id));
     }
 
+
     @PostMapping
     private GameDTO createGame(@RequestBody GameDTO gameDTO) {
         return gameDTOConverter.toDTO(gameService.createGame(gameDTOConverter.toEntity(gameDTO)));
@@ -62,6 +63,8 @@ public class GameController {
     private void deleteGame(@PathVariable("gameId") long gameId) {
         gameRepository.deleteById(gameId);
     }
+
+
 
 
 
