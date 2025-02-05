@@ -5,6 +5,7 @@ import com.example.gameLibrary.model.Library;
 import com.example.gameLibrary.model.LibraryUser;
 import com.example.gameLibrary.repository.GameRepository;
 import com.example.gameLibrary.repository.LibraryRepository;
+import com.example.gameLibrary.repository.LibraryUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,12 @@ public class LibraryService implements LibraryServiceInterface{
 
     LibraryRepository libraryRepository;
     GameRepository gameRepository;
-    LibraryService(LibraryRepository libraryRepository, GameRepository gameRepository) {
+    LibraryUserRepository libraryUserRepository;
+    LibraryService(LibraryRepository libraryRepository,
+                   GameRepository gameRepository, LibraryUserRepository libraryUserRepository) {
         this.libraryRepository = libraryRepository;
         this.gameRepository = gameRepository;
+        this.libraryUserRepository = libraryUserRepository;
     }
 
     @Override
@@ -82,6 +86,30 @@ public class LibraryService implements LibraryServiceInterface{
                 throw new IllegalArgumentException("Game " + gameId + " not in library " + libraryId);
             }
             throw new EntityNotFoundException("Game not found with id " + gameId);
+        }
+        throw new EntityNotFoundException("Library not found with id " + libraryId);
+    }
+
+    @Override
+    public Library setLibraryOwnerById(Long libraryId, Long ownerId) throws EntityNotFoundException {
+        if (libraryRepository.existsById(libraryId)) {
+            if (libraryUserRepository.existsById(ownerId)) {
+                Library someLibrary = libraryRepository.getReferenceById(libraryId);
+                LibraryUser someNewOwner = libraryUserRepository.getReferenceById(ownerId);
+                someLibrary.setLibraryOwner(someNewOwner);
+                return someLibrary;
+            }
+            throw new EntityNotFoundException("User not found with id " + ownerId);
+        }
+        throw new EntityNotFoundException("Library not found with id " + libraryId);
+    }
+
+    @Override
+    public Library removeLibraryOwnerById(Long libraryId) throws EntityNotFoundException {
+        if (libraryRepository.existsById(libraryId)) {
+            Library someLibrary = libraryRepository.getReferenceById(libraryId);
+            someLibrary.setLibraryOwner(null);
+            return someLibrary;
         }
         throw new EntityNotFoundException("Library not found with id " + libraryId);
     }

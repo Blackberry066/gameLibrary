@@ -18,6 +18,8 @@ public interface LibraryServiceInterface {
     void addGameToLibrary(Long libraryId, Long gameId) throws EntityNotFoundException;
     void removeGameFromLibrary(Long libraryId, Long gameId) throws EntityNotFoundException;
 
+    Library setLibraryOwnerById(Long libraryId, Long ownerId) throws EntityNotFoundException;
+    Library removeLibraryOwnerById(Long libraryId) throws EntityNotFoundException;
 
 
 }
