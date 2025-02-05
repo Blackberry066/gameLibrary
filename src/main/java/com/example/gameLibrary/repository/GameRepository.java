@@ -12,6 +12,6 @@ import java.util.Collection;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-    @Query(value = "SELECT g from Game g WHERE :playerA MEMBER OF g.players AND :playerB MEMBER OF g.players")
-    Collection<Game> findGameIntersection(@Param("playerA") LibraryUser a, @Param("playerB") LibraryUser b);
+//    @Query(value = "SELECT g from Game g WHERE :playerA MEMBER OF g.players AND :playerB MEMBER OF g.players")
+//    Collection<Game> findGameIntersection(@Param("playerA") LibraryUser a, @Param("playerB") LibraryUser b);
 }

@@ -1,8 +1,10 @@
 package com.example.gameLibrary.application;
 
 import com.example.gameLibrary.model.Game;
+import com.example.gameLibrary.model.Library;
 import com.example.gameLibrary.model.LibraryUser;
 import com.example.gameLibrary.repository.GameRepository;
+import com.example.gameLibrary.repository.LibraryRepository;
 import com.example.gameLibrary.repository.LibraryUserRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,13 +20,15 @@ import java.util.List;
 @Transactional
 public class GameService implements GameServiceInterface{
 
-    GameRepository gameRepository;
-    LibraryUserRepository libraryUserRepository;
+    private final LibraryRepository libraryRepository;
+    private final GameRepository gameRepository;
+    private final LibraryUserRepository libraryUserRepository;
 
 
-    public GameService(GameRepository gameRepository, LibraryUserRepository libraryUserRepository) {
+    public GameService(GameRepository gameRepository, LibraryUserRepository libraryUserRepository, LibraryRepository libraryRepository) {
         this.gameRepository = gameRepository;
         this.libraryUserRepository = libraryUserRepository;
+        this.libraryRepository = libraryRepository;
     }
 
     @Override
@@ -41,9 +45,10 @@ public class GameService implements GameServiceInterface{
     @Override
     public Collection<Game> getGamesIntersection(LibraryUser first, LibraryUser second)
             throws EntityNotFoundException {
+
         if (libraryUserRepository.existsById(first.getId())
                 && libraryUserRepository.existsById(second.getId())) {
-            return gameRepository.findGameIntersection(first, second);
+            return libraryRepository.findGameIntersection(first.getUserLibrary(), second.getUserLibrary());
         }
         throw new EntityNotFoundException("Some user not found");
     }

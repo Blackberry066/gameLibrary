@@ -2,7 +2,9 @@ package com.example.gameLibrary.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Collection;
@@ -12,6 +14,8 @@ import java.util.Date;
 @Table(name = "Library_User")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class LibraryUser {
     @Id
     @GeneratedValue
@@ -36,10 +40,11 @@ public class LibraryUser {
     @Column(name = "registration_date")
     private Date registrationDate;
 
-    @OneToOne(targetEntity = Library.class, mappedBy = "libraryOwner")
-    private Library ownedByUser;
+    @OneToOne(targetEntity = Library.class)
+    @JoinColumn(name = "library_owner")
+    private Library userLibrary;
 
-    @ManyToMany(targetEntity = Game.class, mappedBy = "players")
-    private Collection<Game> gamesPlaying;
+//    @ManyToMany(targetEntity = Game.class, mappedBy = "players")
+//    private Collection<Game> gamesPlaying;
 
 }

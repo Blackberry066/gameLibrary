@@ -2,7 +2,9 @@ package com.example.gameLibrary.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -13,6 +15,8 @@ import java.util.Date;
 @Table(name = "Library")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Library {
 
     @Id
@@ -22,16 +26,17 @@ public class Library {
 
     @NotBlank
     @Column(name = "game_count")
-    private int gameCount;
+    private Integer gameCount;
 
-    @OneToMany(targetEntity = Game.class, mappedBy = "ownedLibrary", orphanRemoval = true)
+    @ManyToMany(targetEntity = Game.class)
+    @JoinTable(
+            name = "Library_Games",
+            joinColumns = @JoinColumn(name = "id_game"),
+            inverseJoinColumns = @JoinColumn(name = "id_library")
+    )
     private Collection<Game> games;
 
-
-
-
-    @OneToOne(targetEntity = LibraryUser.class)
-    @JoinColumn(name = "library_owner")
+    @OneToOne(targetEntity = LibraryUser.class, mappedBy = "libraryOwner")
     private LibraryUser libraryOwner;
 
 
