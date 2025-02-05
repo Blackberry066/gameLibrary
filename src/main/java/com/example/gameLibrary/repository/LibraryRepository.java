@@ -18,5 +18,4 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
     Collection<Game> findGameIntersection(@Param("firstLibrary") Library firstLibrary,
                                                  @Param("secondLibrary") Library secondLibrary);
 
-
 }

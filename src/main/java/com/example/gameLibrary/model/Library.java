@@ -36,7 +36,7 @@ public class Library {
     )
     private Collection<Game> games;
 
-    @OneToOne(targetEntity = LibraryUser.class, mappedBy = "libraryOwner")
+    @OneToOne(targetEntity = LibraryUser.class, mappedBy = "userLibrary")
     private LibraryUser libraryOwner;
 
 

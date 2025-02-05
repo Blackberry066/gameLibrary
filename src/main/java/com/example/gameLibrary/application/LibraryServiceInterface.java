@@ -21,5 +21,4 @@ public interface LibraryServiceInterface {
     Library setLibraryOwnerById(Long libraryId, Long ownerId) throws EntityNotFoundException;
     Library removeLibraryOwnerById(Long libraryId) throws EntityNotFoundException;
 
-
 }

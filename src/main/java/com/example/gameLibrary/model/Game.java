@@ -39,7 +39,7 @@ public class Game {
     @Column(name = "release_date")
     private Integer releaseYear;
 
-    @ManyToMany(targetEntity = Library.class, mappedBy = "Library_Games")
+    @ManyToMany(targetEntity = Library.class, mappedBy = "games")
     private Collection<Library> libraries;
 
 //    @ManyToMany(targetEntity = LibraryUser.class)

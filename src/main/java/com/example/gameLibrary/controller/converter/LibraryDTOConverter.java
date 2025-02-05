@@ -5,7 +5,11 @@ import com.example.gameLibrary.application.GameServiceInterface;
 import com.example.gameLibrary.application.LibraryUserServiceInterface;
 import com.example.gameLibrary.controller.dto.LibraryDTO;
 import com.example.gameLibrary.model.Library;
+import jakarta.persistence.Column;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class LibraryDTOConverter implements DTOConverter<LibraryDTO, Library> {
     GameServiceInterface gameService;
     LibraryUserServiceInterface libraryUserService;
