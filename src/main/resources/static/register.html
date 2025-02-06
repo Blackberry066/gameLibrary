@@ -68,8 +68,8 @@
   <input type="text" id="name" class="input-field" placeholder="Name*">
   <input type="text" id="surname" class="input-field" placeholder="Surname">
   <button class="register-btn" onclick="registerUser()">Register</button>
-  <p id="success-message" class="success-message" style="display: none;">Регистрация прошла успешно!</p>
-  <p id="fail-message" class="success-message" style="display: none;">Ошибка при регистрации!</p>
+  <p id="success-message" class="success-message" style="display: none;">Registration Completed!</p>
+  <p id="fail-message" class="success-message" style="display: none;">Error while registration!</p>
   <a href="/rest/api" class="back-btn">Back</a>
 </div>
 
@@ -93,14 +93,20 @@
       body: JSON.stringify({ username, password, name, surname})
     })
             .then(response => response.json())
+
             .then(data => {
               if (data && data.id) {
+                document.getElementById("fail-message").style.display = "none";
                 document.getElementById("success-message").style.display = "block";
               } else {
                 document.getElementById("fail-message").style.display = "block";
               }
              })
-            .catch(error => console.error("Ошибка при регистрации:", error));
+            .catch(error =>  {
+              document.getElementById("success-message").style.display = "none";
+              document.getElementById("fail-message").style.display = "block";
+              console.error("Ошибка при регистрации:", error)
+            });
 
   }
   window.onload = loadPage();

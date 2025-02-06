@@ -78,6 +78,11 @@ public class LibraryUserService implements LibraryUserServiceInterface {
     }
 
     @Override
+    public LibraryUser getLibraryUserByUsername(String username) {
+        return libraryUserRepository.findByUsername(username);
+    }
+
+    @Override
     public LibraryUser registerUser(LibraryUser libraryUser) throws IllegalArgumentException {
         libraryUser.setRegistrationDate(new Date());
         Library someNewLibrary = new Library(null, 0, List.of(), libraryUser);

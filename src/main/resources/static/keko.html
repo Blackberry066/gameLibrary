@@ -108,7 +108,7 @@
 
 <header>
     <h1>Game Library</h1>
-    <button class="login-btn" onclick="window.location.href='/register.html'">Login</button>
+    <button class="login-btn" onclick="window.location.href='/rest/api/login'">Login</button>
     <button class="register-btn" onclick="window.location.href='/rest/api/register'">Register</button>
 </header>
 
@@ -146,7 +146,6 @@
             body: JSON.stringify(gameData)
         })
             .then(response => response.json())
-            .then(data => alert(data))
     }
     function loadGames() {
         fetch('api/games', {

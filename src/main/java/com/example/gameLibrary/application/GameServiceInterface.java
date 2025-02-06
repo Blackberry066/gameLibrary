@@ -17,4 +17,6 @@ public interface  GameServiceInterface {
     Collection<Game> getGamesIntersection(LibraryUser first, LibraryUser second)
             throws EntityNotFoundException;
 
+
+
 }

@@ -45,6 +45,15 @@ public class LibraryUserController {
                 libraryUserDTOConverter.toDTO(user)).toList();
     }
 
+    @GetMapping(path = "checkUser/{username}")
+    private LibraryUserDTO checkUser(@PathVariable String username) {
+        LibraryUser someUser = libraryUserService.getLibraryUserByUsername(username);
+        if (someUser != null) {
+            return libraryUserDTOConverter.toDTO(someUser);
+        }
+        return null;
+    }
+
     @GetMapping(path = "{userId}")
     private LibraryUserDTO getUser(@PathVariable Long userId) {
         return libraryUserDTOConverter.toDTO(libraryUserService.getLibraryUserById(userId));
@@ -68,8 +77,12 @@ public class LibraryUserController {
 
     @PostMapping(path = "register")
     private LibraryUserDTO createUser(@RequestBody LibraryUserDTO libraryUserDTO) {
-        return libraryUserDTOConverter.toDTO(libraryUserService.registerUser(libraryUserDTOConverter
-                .toEntity(libraryUserDTO)));
+        if (libraryUserService.getLibraryUserByUsername(libraryUserDTO.getUsername()) == null) {
+            return libraryUserDTOConverter.toDTO(libraryUserService.registerUser(libraryUserDTOConverter
+                    .toEntity(libraryUserDTO)));
+        }
+        return null;
+
 
     }
 
