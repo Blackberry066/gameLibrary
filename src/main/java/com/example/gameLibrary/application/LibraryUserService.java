@@ -1,6 +1,9 @@
 package com.example.gameLibrary.application;
 
+import com.example.gameLibrary.model.Game;
+import com.example.gameLibrary.model.Library;
 import com.example.gameLibrary.model.LibraryUser;
+import com.example.gameLibrary.repository.LibraryRepository;
 import com.example.gameLibrary.repository.LibraryUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -15,10 +18,12 @@ import java.util.List;
 @Transactional
 public class LibraryUserService implements LibraryUserServiceInterface {
 
+    private final LibraryRepository libraryRepository;
     LibraryUserRepository libraryUserRepository;
 
-    LibraryUserService(LibraryUserRepository libraryUserRepository) {
+    LibraryUserService(LibraryUserRepository libraryUserRepository, LibraryRepository libraryRepository) {
         this.libraryUserRepository = libraryUserRepository;
+        this.libraryRepository = libraryRepository;
     }
 
     @Override
@@ -26,6 +31,8 @@ public class LibraryUserService implements LibraryUserServiceInterface {
         return libraryUserRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Could not find library user with id " + id));
     }
+
+
 
 
     @Override
@@ -68,6 +75,18 @@ public class LibraryUserService implements LibraryUserServiceInterface {
             return someUser;
         }
         throw new EntityNotFoundException("Could not find library user with id " + id);
+    }
+
+    @Override
+    public LibraryUser registerUser(LibraryUser libraryUser) throws IllegalArgumentException {
+        libraryUser.setRegistrationDate(new Date());
+        Library someNewLibrary = new Library(null, 0, List.of(), libraryUser);
+
+        Library savedLibrary = libraryRepository.save(someNewLibrary);
+        libraryUser.setUserLibrary(savedLibrary);
+
+        return libraryUserRepository.save(libraryUser);
+
     }
 
 

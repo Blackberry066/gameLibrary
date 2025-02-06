@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/rest/api/games")
+@RequestMapping("rest/api/games")
 public class GameController {
     GameServiceInterface gameService;
     LibraryServiceInterface libraryService;
@@ -34,11 +34,11 @@ public class GameController {
         this.libraryUserDTOConverter = libraryUserDTOConverter;
     }
 
-    private GameRepository gameRepository;
+
 
     @GetMapping
     private Collection<Game> getGames() {
-        return gameRepository.findAll();
+        return gameService.getAllGames();
     }
 
     @GetMapping(path = "{id}")
@@ -61,7 +61,7 @@ public class GameController {
 
     @DeleteMapping(path = "{gameId}")
     private void deleteGame(@PathVariable("gameId") long gameId) {
-        gameRepository.deleteById(gameId);
+        gameService.deleteGameById(gameId);
     }
 
 

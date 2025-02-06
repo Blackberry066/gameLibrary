@@ -66,9 +66,9 @@ public class LibraryUserController {
                 gameDTOConverter.toDTO(game)).toList();
     }
 
-    @PostMapping
+    @PostMapping(path = "register")
     private LibraryUserDTO createUser(@RequestBody LibraryUserDTO libraryUserDTO) {
-        return libraryUserDTOConverter.toDTO(libraryUserService.createLibraryUser(libraryUserDTOConverter
+        return libraryUserDTOConverter.toDTO(libraryUserService.registerUser(libraryUserDTOConverter
                 .toEntity(libraryUserDTO)));
 
     }

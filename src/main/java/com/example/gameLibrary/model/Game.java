@@ -32,7 +32,7 @@ public class Game {
     @Column(name = "genre")
     private String genre;
 
-    @NotBlank
+
     @Column(name = "price")
     private Integer price;
 

@@ -23,8 +23,14 @@ public class LibraryUserDTOConverter implements DTOConverter<LibraryUserDTO, Lib
 
     @Override
     public LibraryUser toEntity(LibraryUserDTO libraryUserDTO) {
+        if (libraryUserDTO.getOwnedLibraryId() != null) {
+            return new LibraryUser(libraryUserDTO.getId(), libraryUserDTO.getUsername(), libraryUserDTO.getPassword(),
+                    libraryUserDTO.getName(), libraryUserDTO.getSurname(), libraryUserDTO.getRegistrationDate(),
+                    libraryService.getLibraryById(libraryUserDTO.getOwnedLibraryId()));
+        }
         return new LibraryUser(libraryUserDTO.getId(), libraryUserDTO.getUsername(), libraryUserDTO.getPassword(),
                 libraryUserDTO.getName(), libraryUserDTO.getSurname(), libraryUserDTO.getRegistrationDate(),
-                libraryService.getLibraryById(libraryUserDTO.getOwnedLibraryId()));
+                null);
+
     }
 }

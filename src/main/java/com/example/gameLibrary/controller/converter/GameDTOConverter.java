@@ -21,14 +21,21 @@ public class GameDTOConverter implements DTOConverter<GameDTO, Game> {
     }
 
     public GameDTO toDTO(Game someGame) {
+        if (someGame.getLibraries() != null) {
+            return new GameDTO(someGame.getId(), someGame.getTitle(), someGame.getGenre(), someGame.getPrice(),
+                    someGame.getReleaseYear(), someGame.getLibraries().stream()
+                    .map(library -> library.getId()).toList());
+        }
         return new GameDTO(someGame.getId(), someGame.getTitle(), someGame.getGenre(), someGame.getPrice(),
-                someGame.getReleaseYear(), someGame.getLibraries().stream()
-                .map(library -> library.getId()).toList());
+                someGame.getReleaseYear(), null);
     }
 
     public Game toEntity(GameDTO someGameDTO) {
+        if (someGameDTO.getOwnedLibrariesIds() != null)
+            return new Game(someGameDTO.getId(), someGameDTO.getTitle(), someGameDTO.getGenre(), someGameDTO.getPrice(),
+                    someGameDTO.getYear(), someGameDTO.getOwnedLibrariesIds().stream()
+                    .map(libraryId -> libraryService.getLibraryById(libraryId)).toList());
         return new Game(someGameDTO.getId(), someGameDTO.getTitle(), someGameDTO.getGenre(), someGameDTO.getPrice(),
-                someGameDTO.getYear(), someGameDTO.getOwnedLibrariesIds().stream()
-                .map(libraryId -> libraryService.getLibraryById(libraryId)).toList());
+                someGameDTO.getYear(), null);
     }
 }

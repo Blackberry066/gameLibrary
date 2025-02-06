@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Регистрация</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .register-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      text-align: center;
+    }
+
+    .register-container h2 {
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .register-btn {
+      background-color: #61dafb;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 1rem;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+
+    .register-btn:hover {
+      background-color: #4fc3f7;
+    }
+
+    .back-btn {
+      margin-top: 15px;
+      display: block;
+      text-decoration: none;
+      color: #61dafb;
+    }
+  </style>
+</head>
+<body>
+
+<div class="register-container">
+  <h2>Registration</h2>
+  <input type="text" id="username" class="input-field" placeholder="Login*">
+  <input type="password" id="password" class="input-field" placeholder="Password*">
+  <input type="text" id="name" class="input-field" placeholder="Name*">
+  <input type="text" id="surname" class="input-field" placeholder="Surname">
+  <button class="register-btn" onclick="registerUser()">Register</button>
+  <p id="success-message" class="success-message" style="display: none;">Регистрация прошла успешно!</p>
+  <p id="fail-message" class="success-message" style="display: none;">Ошибка при регистрации!</p>
+  <a href="/rest/api" class="back-btn">Back</a>
+</div>
+
+<script>
+  function loadPage() {
+    fetch('rest/api/users/register')
+  }
+  function registerUser() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const name = document.getElementById("name").value;
+    const surname = document.getElementById("surname").value;
+
+    if (!username || !password || !name) {
+      alert("Write login, password and first name!");
+      return;
+    }
+    fetch('/rest/api/users/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, name, surname})
+    })
+            .then(response => response.json())
+            .then(data => {
+              if (data && data.id) {
+                document.getElementById("success-message").style.display = "block";
+              } else {
+                document.getElementById("fail-message").style.display = "block";
+              }
+             })
+            .catch(error => console.error("Ошибка при регистрации:", error));
+
+  }
+  window.onload = loadPage();
+</script>
+
+</body>
+</html>

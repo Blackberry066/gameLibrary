@@ -13,5 +13,5 @@ public interface LibraryUserServiceInterface {
     Collection<LibraryUser> getAllLibraryUsers();
 
     LibraryUser changeUserUsernameById(Long id, String newUsername) throws EntityNotFoundException;
-
+    LibraryUser registerUser(LibraryUser libraryUser) throws IllegalArgumentException;
 }
