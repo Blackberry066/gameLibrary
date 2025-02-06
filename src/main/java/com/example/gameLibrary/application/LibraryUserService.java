@@ -78,8 +78,10 @@ public class LibraryUserService implements LibraryUserServiceInterface {
     }
 
     @Override
-    public LibraryUser getLibraryUserByUsername(String username) {
-        return libraryUserRepository.findByUsername(username);
+    public LibraryUser getLibraryUserByUsername(String username) throws IllegalArgumentException{
+        if (libraryUserRepository.existsByUsername(username))
+            return libraryUserRepository.findByUsername(username);
+        throw new IllegalArgumentException("Library for that username not found!");
     }
 
     @Override

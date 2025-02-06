@@ -50,7 +50,7 @@ public class LibraryService implements LibraryServiceInterface{
     @Override
     public Library updateLibrary(Library library) throws IllegalArgumentException{
         if (libraryRepository.existsById(library.getId())) {
-            libraryRepository.save(library);
+            return libraryRepository.save(library);
         }
         throw new IllegalArgumentException("Library not exist");
     }
@@ -64,8 +64,13 @@ public class LibraryService implements LibraryServiceInterface{
     public void addGameToLibrary(Long libraryId, Long gameId) throws EntityNotFoundException {
         if (libraryRepository.existsById(libraryId)) {
             if (gameRepository.existsById(gameId)) {
-                libraryRepository.getReferenceById(libraryId).getGames()
-                        .add(gameRepository.getReferenceById(gameId));
+                Library someLibrary = libraryRepository.getReferenceById(libraryId);
+                Game someGame = gameRepository.getReferenceById(gameId);
+                someLibrary.getGames().add(someGame);
+
+                libraryRepository.save(someLibrary);
+                gameRepository.save(someGame);
+
                 return;
             }
             throw new EntityNotFoundException("Game not found with id " + gameId);

@@ -54,10 +54,13 @@ public class LibraryController {
 
     @PostMapping(path = "{id}")
     private void addGameToLibrary(@PathVariable("id") Long libraryId, @RequestBody GameDTO gameDTO) {
+        Game someGame = gameService.getGameByTitle(gameDTO.getTitle());
         Library someLibrary = libraryService.getLibraryById(libraryId);
+        if (someLibrary.getGames().stream().map(game -> game.getId()).toList().contains(someGame.getId()))
+            return;
         someLibrary.setGameCount(someLibrary.getGameCount() + 1);
         libraryService.updateLibrary(someLibrary);
-        libraryService.addGameToLibrary(libraryId, gameDTO.getId());
+        libraryService.addGameToLibrary(libraryId, someGame.getId());
     }
 
     @PutMapping(path = "{id}")

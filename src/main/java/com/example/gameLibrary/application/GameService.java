@@ -54,6 +54,14 @@ public class GameService implements GameServiceInterface{
     }
 
     @Override
+    public Game getGameByTitle(String title) throws EntityNotFoundException {
+        if(gameRepository.existsGameByTitle(title)) {
+            return gameRepository.getReferenceByTitle(title);
+        }
+        throw new EntityNotFoundException("Game not found");
+    }
+
+    @Override
     public Game createGame(Game game) throws IllegalArgumentException {
         if (game.getReleaseYear() <= LocalDate.now().getYear()) {
             return gameRepository.save(game);

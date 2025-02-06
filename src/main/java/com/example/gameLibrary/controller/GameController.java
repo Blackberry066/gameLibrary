@@ -37,8 +37,8 @@ public class GameController {
 
 
     @GetMapping
-    private Collection<Game> getGames() {
-        return gameService.getAllGames();
+    private Collection<GameDTO> getGames() {
+        return gameService.getAllGames().stream().map(game -> gameDTOConverter.toDTO(game)).toList();
     }
 
     @GetMapping(path = "{id}")

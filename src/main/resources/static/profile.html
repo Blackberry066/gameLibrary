@@ -28,6 +28,7 @@
             justify-content: center;
             gap: 20px;
         }
+
         .back-btn {
             background-color: #61dafb;
             color: #282c34;
@@ -57,36 +58,76 @@
             font-size: 1.4rem;
             margin-bottom: 10px;
         }
+
+        .game-section {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+        }
+
+        .left-title {
+            text-align: left;
+            flex: 1;
+        }
+
+        .right-title {
+            text-align: right;
+            flex: 1;
+        }
+
+        .game-container {
+            width: 45%;
+        }
+
+        .my-games, .available-games {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 <button class="back-btn" onclick="window.location.href='/rest/api'">Back</button>
+
 <div class="profile-container">
     <h2 id="username">Загрузка...</h2>
-    <h3>Ваши игры:</h3>
     <div class="game-list" id="gameList"></div>
+</div>
+
+<div class="game-section">
+    <div class="game-container my-games">
+        <h3 class="left-title">Ваши игры:</h3>
+        <div class="game-list" id="userGamesList"></div>
+    </div>
+
+    <div class="game-container available-games">
+        <h3 class="right-title">Доступные игры:</h3>
+        <div class="game-list" id="availableGamesList"></div>
+    </div>
 </div>
 
 <script>
     const someUserId = window.location.pathname.split("/").pop();
+    var userLibraryId = null;
     fetch(`/rest/api/users/${someUserId}`)
         .then(response => response.json())
         .then(user => {
-            console.log(user);
-            return user;
-        })
-        .then(user => {
+            userLibraryId = user.ownedLibraryId;
             document.getElementById("username").textContent = `Profile: ${user.username}`;
             loadUserGames(user.id);
         })
         .catch(error => console.error("Error: ", error));
 
     function loadUserGames(userId) {
-        fetch(`/api/user/${userId}/games`)
+        fetch(`/rest/api/libraries/${userId}`)
             .then(response => response.json())
             .then(games => {
-                const gameList = document.getElementById("gameList");
-                gameList.innerHTML = "";
+                const userGamesList = document.getElementById("userGamesList");
+                userGamesList.innerHTML = "";
                 games.forEach(game => {
                     const gameCard = document.createElement("div");
                     gameCard.className = "game-card";
@@ -95,15 +136,86 @@
                         <p><strong>Жанр:</strong> ${game.genre}</p>
                         <p><strong>Цена:</strong> $${game.price}</p>
                         <p><strong>Год выпуска:</strong> ${game.releaseYear}</p>
+                        <button onclick="removeGame(${game.id}, this)">Удалить</button>
                     `;
-                    gameList.appendChild(gameCard);
+                    userGamesList.appendChild(gameCard);
                 });
             })
             .catch(error => console.error("Ошибка загрузки игр: ", error));
     }
 
+    function loadAvailableGames() {
+        fetch('/rest/api/games', {
+            method: 'GET'
+        })
+            .then(response => response.json())
+            .then(data => {
+                const availableGamesList = document.getElementById("availableGamesList");
+                availableGamesList.innerHTML = ""; // Очищаем старые игры
+                data.forEach(game => {
+                    const gameCard = document.createElement("div");
+                    gameCard.className = "game-card";
+                    gameCard.innerHTML = `
+                        <h3>${game.title}</h3>
+                        <p><strong>Жанр:</strong> ${game.genre}</p>
+                        <p><strong>Цена:</strong> $${game.price}</p>
+                        <p><strong>Год выпуска:</strong> ${game.year}</p>
+                        <button onclick="addGame(${game.id}, this)">Добавить</button>
+                    `;
+                    availableGamesList.appendChild(gameCard);
+                });
+            })
+            .catch(error => console.error("Ошибка загрузки доступных игр: ", error));
+    }
 
-    // window.onload = loadUserProfile;
+    function addGame(gameId, button) {
+        const gameCard = button.parentElement;
+        const gameTitle = gameCard.querySelector("h3").textContent;
+        const gameGenre = gameCard.querySelector("p:nth-of-type(1)").textContent.split(":")[1].trim();
+        const gamePrice = gameCard.querySelector("p:nth-of-type(2)").textContent.split(":")[1].trim().replace("$", "");
+        const gameYear = gameCard.querySelector("p:nth-of-type(3)").textContent.split(":")[1].trim();
+
+
+        const userGamesList = document.getElementById("userGamesList");
+        const gameCardToAdd = document.createElement("div");
+        gameCardToAdd.className = "game-card";
+        gameCardToAdd.innerHTML = `
+            <h3>${gameTitle}</h3>
+            <p><strong>Жанр:</strong> ${gameGenre}</p>
+            <p><strong>Цена:</strong> ${gamePrice}</p>
+            <p><strong>Год выпуска:</strong> ${gameYear}</p>
+            <button onclick="removeGame(${gameId}, this)">Удалить</button>
+        `;
+
+
+
+        userGamesList.appendChild(gameCardToAdd);
+
+
+        button.remove();
+        loadAvailableGames();
+        console.log(userLibraryId);
+        fetch('/rest/api/libraries/' + userLibraryId, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "title": gameTitle, "genre": gameGenre, "price": gamePrice, "year": gameYear})
+        })
+            .then(response=>response.json())
+            .then(data => console.log(data))
+
+
+    }
+
+    function removeGame(gameId, button) {
+        const gameCard = button.parentElement;
+        gameCard.remove();
+
+
+
+        loadAvailableGames();
+    }
+
+    window.onload = loadAvailableGames;
 </script>
 
 </body>
