@@ -21,15 +21,34 @@ public class LibraryDTOConverter implements DTOConverter<LibraryDTO, Library> {
 
     @Override
     public LibraryDTO toDTO(Library library) {
+        if(library.getGames() != null) {
+            if(library.getLibraryOwner()!= null) {
+                return new LibraryDTO(library.getId(), library.getGameCount(),
+                        library.getGames().stream().map(game-> game.getId()).toList(), library.getLibraryOwner().getId());
+            }
+            return new LibraryDTO(library.getId(), library.getGameCount(),
+                    library.getGames().stream().map(game-> game.getId()).toList(), null);
+
+        }
         return new LibraryDTO(library.getId(), library.getGameCount(),
-                library.getGames().stream().map(game-> game.getId()).toList(), library.getLibraryOwner().getId());
+                null, null);
+
 
     }
 
     @Override
     public Library toEntity(LibraryDTO libraryDTO) {
-        return new Library(libraryDTO.getId(), libraryDTO.getGameCount(),
-                libraryDTO.getGamesIds().stream().map(gameId -> gameService.getGameById(gameId)).toList(),
-                libraryUserService.getLibraryUserById(libraryDTO.getLibraryOwnerId()));
+        if (libraryDTO.getGamesIds()!= null) {
+            if (libraryUserService.getLibraryUserById(libraryDTO.getLibraryOwnerId())!=null)
+            {
+                return new Library(libraryDTO.getId(), libraryDTO.getGameCount(),
+                        libraryDTO.getGamesIds().stream().map(gameId -> gameService.getGameById(gameId)).toList(),
+                        libraryUserService.getLibraryUserById(libraryDTO.getLibraryOwnerId()));
+            }
+            return new Library(libraryDTO.getId(), libraryDTO.getGameCount(),
+                    libraryDTO.getGamesIds().stream().map(gameId -> gameService.getGameById(gameId)).toList(), null);
+        }
+        return new Library(libraryDTO.getId(), libraryDTO.getGameCount(),null, null);
+
     }
 }

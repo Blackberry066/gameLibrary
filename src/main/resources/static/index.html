@@ -46,7 +46,19 @@
             cursor: pointer;
             border-radius: 5px;
             transition: 0.3s;
-            margin-left: 1100px;
+            margin-left: 2px;
+        }
+
+        .inter-btn {
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            margin-left: 5px;
         }
 
         .add-button {
@@ -110,6 +122,7 @@
     <h1>Game Library</h1>
     <button class="login-btn" onclick="window.location.href='/rest/api/login'">Login</button>
     <button class="register-btn" onclick="window.location.href='/rest/api/register'">Register</button>
+    <button class="inter-btn" onclick="window.location.href='/rest/api/intersections'">Intersections</button>
 </header>
 
 <main>
@@ -146,6 +159,9 @@
             body: JSON.stringify(gameData)
         })
             .then(response => response.json())
+            .then(() => {
+                location.reload();
+            })
     }
     function loadGames() {
         fetch('api/games', {
@@ -167,7 +183,7 @@
                         <h3>${game.title}</h3>
                         <p><strong>Genre:</strong> ${game.genre}</p>
                         <p><strong>Price:</strong> $${game.price}</p>
-                        <p><strong>Release year:</strong> ${game.releaseYear}</p>
+                        <p><strong>Release year:</strong> ${game.year}</p>
                     `;
                     gameList.appendChild(gameCard);
                 });

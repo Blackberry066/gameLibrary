@@ -9,6 +9,7 @@ import com.example.gameLibrary.controller.dto.LibraryDTO;
 import com.example.gameLibrary.model.Game;
 import com.example.gameLibrary.model.Library;
 import com.example.gameLibrary.repository.LibraryRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -35,23 +36,27 @@ public class LibraryController {
         this.libraryUserDTOConverter = libraryUserDTOConverter;
     }
 
+    @Operation(summary = "Returns all libraries")
     @GetMapping
     private Collection<LibraryDTO> getLibraries() {
         return libraryService.getAllLibraries().stream()
                 .map(library -> libraryDTOConverter.toDTO(library)).toList();
     }
 
+    @Operation(summary = "Return all games from library with id")
     @GetMapping(path = "{libraryId}")
     private Collection<GameDTO> getGames(@PathVariable("libraryId") Long libraryId) {
         return libraryService.getLibraryById(libraryId).getGames().stream()
                 .map(game -> gameDTOConverter.toDTO(game)).toList();
     }
 
+    @Operation(summary = "Creates new library")
     @PostMapping
     private LibraryDTO createLibrary(@RequestBody LibraryDTO libraryDTO) {
         return libraryDTOConverter.toDTO(libraryService.createLibrary(libraryDTOConverter.toEntity(libraryDTO)));
     }
 
+    @Operation(summary = "Add game to library with id")
     @PostMapping(path = "{id}")
     private void addGameToLibrary(@PathVariable("id") Long libraryId, @RequestBody GameDTO gameDTO) {
         Game someGame = gameService.getGameByTitle(gameDTO.getTitle());
@@ -63,6 +68,17 @@ public class LibraryController {
         libraryService.addGameToLibrary(libraryId, someGame.getId());
     }
 
+    @Operation(summary = "Delete game from library")
+    @DeleteMapping(path = "{id}")
+    private void removeGameFromLibrary(@PathVariable("id") Long libraryId, @RequestBody GameDTO gameDTO) {
+        Game someGame = gameService.getGameById(gameDTO.getId());
+        Library someLibrary = libraryService.getLibraryById(libraryId);
+        someLibrary.setGameCount(someLibrary.getGameCount() - 1);
+        libraryService.updateLibrary(someLibrary);
+        libraryService.removeGameFromLibrary(libraryId, someGame.getId());
+    }
+
+    @Operation(summary = "Change library id")
     @PutMapping(path = "{id}")
     private LibraryDTO updateLibrary(@PathVariable("id") Long libraryId, @RequestBody LibraryDTO libraryDTO) {
         Library someLibrary = libraryService.getLibraryById(libraryDTO.getId());
@@ -70,7 +86,8 @@ public class LibraryController {
         return libraryDTOConverter.toDTO(libraryService.updateLibrary(someLibrary));
     }
 
-    @DeleteMapping(path = "{id}")
+    @Operation(summary = "Removes library")
+    @DeleteMapping(path = "library/{id}")
     private void deleteLibrary(@PathVariable("id") Long libraryId) {
         libraryService.deleteLibraryById(libraryId);
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -20,8 +21,8 @@ public class LibraryService implements LibraryServiceInterface{
     LibraryRepository libraryRepository;
     GameRepository gameRepository;
     LibraryUserRepository libraryUserRepository;
-    LibraryService(LibraryRepository libraryRepository,
-                   GameRepository gameRepository, LibraryUserRepository libraryUserRepository) {
+    public LibraryService(LibraryRepository libraryRepository,
+                          GameRepository gameRepository, LibraryUserRepository libraryUserRepository) {
         this.libraryRepository = libraryRepository;
         this.gameRepository = gameRepository;
         this.libraryUserRepository = libraryUserRepository;
@@ -84,11 +85,33 @@ public class LibraryService implements LibraryServiceInterface{
         if (libraryRepository.existsById(libraryId)) {
             if (gameRepository.existsById(gameId)) {
                 Library someLibrary = libraryRepository.getReferenceById(libraryId);
+
+
                 Game someGame = gameRepository.getReferenceById(gameId);
+                String gameTitles = someLibrary.getGames()
+                        .stream()
+                        .map(game -> {
+                            return game.getTitle();
+                        })
+                        .collect(Collectors.joining(", "));
+                String gameIds = someLibrary.getGames()
+                        .stream()
+                        .map(game -> String.valueOf(game.getId())) // Преобразуем id в строку
+                        .collect(Collectors.joining(", "));
                 if (someLibrary.getGames().contains(someGame)) {
+                    someGame.getLibraries().remove(someLibrary);
+                    gameRepository.save(someGame);
+
                     someLibrary.getGames().remove(someGame);
+                    libraryRepository.save(someLibrary);
+                    return;
+
+
                 }
-                throw new IllegalArgumentException("Game " + gameId + " not in library " + libraryId);
+
+
+                throw new IllegalArgumentException("Game " + gameId + " not in library. Existing games: " + gameTitles +
+                        " with IDs " + gameIds);
             }
             throw new EntityNotFoundException("Game not found with id " + gameId);
         }

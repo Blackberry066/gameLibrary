@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/rest/api")
 public class MainPageController {
     @GetMapping
-    public String home() { return "/keko.html" ;}
+    public String home() { return "/index.html" ;}
 
     @GetMapping(path = "register")
     public String register() { return "/register.html";}
@@ -21,5 +21,8 @@ public class MainPageController {
 
     @GetMapping(path = "login")
     public String login() {return "/login.html";}
+
+    @GetMapping(path = "intersections")
+    public String intersections() {return "/intersection.html";}
 
 }

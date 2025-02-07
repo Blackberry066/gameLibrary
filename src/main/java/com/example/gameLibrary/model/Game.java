@@ -39,7 +39,8 @@ public class Game {
     @Column(name = "release_date")
     private Integer releaseYear;
 
-    @ManyToMany(targetEntity = Library.class, mappedBy = "games")
+    @ManyToMany(targetEntity = Library.class, mappedBy = "games",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Collection<Library> libraries;
 
 //    @ManyToMany(targetEntity = LibraryUser.class)

@@ -8,9 +8,7 @@ import com.example.gameLibrary.controller.converter.LibraryDTOConverter;
 import com.example.gameLibrary.controller.converter.LibraryUserDTOConverter;
 import com.example.gameLibrary.controller.dto.GameDTO;
 import com.example.gameLibrary.controller.dto.LibraryUserDTO;
-import com.example.gameLibrary.model.Game;
 import com.example.gameLibrary.model.LibraryUser;
-import com.example.gameLibrary.repository.LibraryUserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -39,12 +37,15 @@ public class LibraryUserController {
         this.libraryDTOConverter = libraryDTOConverter;
         this.libraryUserDTOConverter = libraryUserDTOConverter;
     }
+
+    @Operation(summary = "Get all users")
     @GetMapping
     private Collection<LibraryUserDTO> getUsers() {
         return libraryUserService.getAllLibraryUsers().stream().map(user ->
                 libraryUserDTOConverter.toDTO(user)).toList();
     }
 
+    @Operation(summary = "Check if user already registered")
     @GetMapping(path = "checkUser/{username}")
     private LibraryUserDTO checkUser(@PathVariable String username) {
         LibraryUser someUser = libraryUserService.getLibraryUserByUsername(username);
@@ -54,6 +55,7 @@ public class LibraryUserController {
         return null;
     }
 
+    @Operation(summary = "Get some user")
     @GetMapping(path = "{userId}")
     private LibraryUserDTO getUser(@PathVariable Long userId) {
         return libraryUserDTOConverter.toDTO(libraryUserService.getLibraryUserById(userId));
@@ -75,6 +77,8 @@ public class LibraryUserController {
                 gameDTOConverter.toDTO(game)).toList();
     }
 
+
+    @Operation(summary = "User registration")
     @PostMapping(path = "register")
     private LibraryUserDTO createUser(@RequestBody LibraryUserDTO libraryUserDTO) {
         if (libraryUserService.getLibraryUserByUsername(libraryUserDTO.getUsername()) == null) {
@@ -86,6 +90,7 @@ public class LibraryUserController {
 
     }
 
+    @Operation(summary = "User id update")
     @PutMapping(path = "{id}")
     private LibraryUserDTO updateUser(@PathVariable("id") Long someNewId,
                                      @RequestBody LibraryUserDTO libraryUserDTO) {
@@ -94,6 +99,7 @@ public class LibraryUserController {
         return libraryUserDTOConverter.toDTO(libraryUserService.updateLibraryUser(someUser));
     }
 
+    @Operation(summary = "User deletion")
     @DeleteMapping(path = "{id}")
     private void deleteUser(@PathVariable("id") Long someId) {
         libraryUserService.deleteLibraryUser(someId);

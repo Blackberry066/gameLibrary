@@ -1,6 +1,5 @@
 package com.example.gameLibrary.application;
 
-import com.example.gameLibrary.model.Game;
 import com.example.gameLibrary.model.Library;
 import com.example.gameLibrary.model.LibraryUser;
 import com.example.gameLibrary.repository.LibraryRepository;
@@ -9,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -78,10 +76,8 @@ public class LibraryUserService implements LibraryUserServiceInterface {
     }
 
     @Override
-    public LibraryUser getLibraryUserByUsername(String username) throws IllegalArgumentException{
-        if (libraryUserRepository.existsByUsername(username))
-            return libraryUserRepository.findByUsername(username);
-        throw new IllegalArgumentException("Library for that username not found!");
+    public LibraryUser getLibraryUserByUsername(String username) {
+        return libraryUserRepository.findByUsername(username);
     }
 
     @Override

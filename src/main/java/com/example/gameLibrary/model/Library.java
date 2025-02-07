@@ -28,11 +28,12 @@ public class Library {
     @Column(name = "game_count")
     private Integer gameCount;
 
-    @ManyToMany(targetEntity = Game.class)
+    @ManyToMany(targetEntity = Game.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH,
+            CascadeType.REMOVE})
     @JoinTable(
             name = "Library_Games",
-            joinColumns = @JoinColumn(name = "id_game"),
-            inverseJoinColumns = @JoinColumn(name = "id_library")
+            joinColumns = @JoinColumn(name = "id_library"),
+            inverseJoinColumns = @JoinColumn(name = "id_game")
     )
     private Collection<Game> games;
 

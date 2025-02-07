@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль пользователя</title>
+    <title>User profile</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -100,12 +100,12 @@
 
 <div class="game-section">
     <div class="game-container my-games">
-        <h3 class="left-title">Ваши игры:</h3>
+        <h3 class="left-title">Your Games:</h3>
         <div class="game-list" id="userGamesList"></div>
     </div>
 
     <div class="game-container available-games">
-        <h3 class="right-title">Доступные игры:</h3>
+        <h3 class="right-title">Available Games:</h3>
         <div class="game-list" id="availableGamesList"></div>
     </div>
 </div>
@@ -129,19 +129,20 @@
                 const userGamesList = document.getElementById("userGamesList");
                 userGamesList.innerHTML = "";
                 games.forEach(game => {
+                    console.log(game);
                     const gameCard = document.createElement("div");
                     gameCard.className = "game-card";
                     gameCard.innerHTML = `
                         <h3>${game.title}</h3>
-                        <p><strong>Жанр:</strong> ${game.genre}</p>
-                        <p><strong>Цена:</strong> $${game.price}</p>
-                        <p><strong>Год выпуска:</strong> ${game.releaseYear}</p>
-                        <button onclick="removeGame(${game.id}, this)">Удалить</button>
+                        <p><strong>Genre:</strong> ${game.genre}</p>
+                        <p><strong>Price:</strong> $${game.price}</p>
+                        <p><strong>Release Year:</strong> ${game.year}</p>
+                        <button onclick="removeGame(${game.id}, this)">Delete</button>
                     `;
                     userGamesList.appendChild(gameCard);
                 });
             })
-            .catch(error => console.error("Ошибка загрузки игр: ", error));
+            .catch(error => console.error("Error loading games: ", error));
     }
 
     function loadAvailableGames() {
@@ -157,15 +158,15 @@
                     gameCard.className = "game-card";
                     gameCard.innerHTML = `
                         <h3>${game.title}</h3>
-                        <p><strong>Жанр:</strong> ${game.genre}</p>
-                        <p><strong>Цена:</strong> $${game.price}</p>
-                        <p><strong>Год выпуска:</strong> ${game.year}</p>
-                        <button onclick="addGame(${game.id}, this)">Добавить</button>
+                        <p><strong>Genre:</strong> ${game.genre}</p>
+                        <p><strong>Price:</strong> $${game.price}</p>
+                        <p><strong>Release Year:</strong> ${game.year}</p>
+                        <button onclick="addGame(${game.id}, this)">Add</button>
                     `;
                     availableGamesList.appendChild(gameCard);
                 });
             })
-            .catch(error => console.error("Ошибка загрузки доступных игр: ", error));
+            .catch(error => console.error("Error loading available games: ", error));
     }
 
     function addGame(gameId, button) {
@@ -177,41 +178,45 @@
 
 
         const userGamesList = document.getElementById("userGamesList");
-        const gameCardToAdd = document.createElement("div");
-        gameCardToAdd.className = "game-card";
-        gameCardToAdd.innerHTML = `
-            <h3>${gameTitle}</h3>
-            <p><strong>Жанр:</strong> ${gameGenre}</p>
-            <p><strong>Цена:</strong> ${gamePrice}</p>
-            <p><strong>Год выпуска:</strong> ${gameYear}</p>
-            <button onclick="removeGame(${gameId}, this)">Удалить</button>
-        `;
-
-
-
-        userGamesList.appendChild(gameCardToAdd);
-
-
-        button.remove();
-        loadAvailableGames();
-        console.log(userLibraryId);
         fetch('/rest/api/libraries/' + userLibraryId, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ "title": gameTitle, "genre": gameGenre, "price": gamePrice, "year": gameYear})
         })
             .then(response=>response.json())
-            .then(data => console.log(data))
+            .then(() => {
+                const gameCardToAdd = document.createElement("div");
+
+                gameCardToAdd.className = "game-card";
+                gameCardToAdd.innerHTML = `
+                <h3>${gameTitle}</h3>
+                <p><strong>Genre:</strong> ${gameGenre}</p>
+                <p><strong>Price:</strong> ${gamePrice}</p>
+                <p><strong>Release Year:</strong> ${gameYear}</p>
+                <button onclick="removeGame(${gameId}, this)">Delete</button>
+            `;
+                userGamesList.appendChild(gameCardToAdd);
+
+
+
+                }
+            )
+        location.reload();
+        button.remove();
+        loadAvailableGames();
 
 
     }
 
     function removeGame(gameId, button) {
         const gameCard = button.parentElement;
+
+        fetch('/rest/api/libraries/' + userLibraryId, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({"id": gameId})
+        })
         gameCard.remove();
-
-
-
         loadAvailableGames();
     }
 
